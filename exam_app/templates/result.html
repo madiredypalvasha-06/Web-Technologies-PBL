@@ -2,14 +2,30 @@
 <html>
 <head>
     <title>Exam Result</title>
+
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
 
-<h2>Exam Completed</h2>
+<body class="bg-light">
 
-<h3>Your Score: {{ score }} / {{ total }}</h3>
+<div class="container mt-5">
+    <div class="card shadow p-4 text-center">
 
-<a href="/exam/">Take Again</a>
+        <h2 class="mb-3">Exam Completed</h2>
+
+        <h3 class="mb-3">Your Score: {{ score }} / {{ total }}</h3>
+
+        {% if score >= total|divisibleby:2 %}
+            <p class="text-success fw-bold">🎉 Good Job! You Passed.</p>
+        {% else %}
+            <p class="text-danger fw-bold">😔 Better Luck Next Time.</p>
+        {% endif %}
+
+        <a href="/exam/" class="btn btn-primary mt-3">Take Exam Again</a>
+
+    </div>
+</div>
 
 </body>
 </html>
