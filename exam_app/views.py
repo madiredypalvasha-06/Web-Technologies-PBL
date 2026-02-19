@@ -15,9 +15,13 @@ def start_exam(request):
             if selected_answer == question.correct_answer:
                 score += 1
 
+        total = len(questions)
+        passed = score >= (total / 2)
+
         return render(request, 'result.html', {
             'score': score,
-            'total': len(questions)
+            'total': total,
+            'passed': passed
         })
 
     else:
@@ -27,5 +31,7 @@ def start_exam(request):
         # Store question IDs in session
         request.session['exam_questions'] = [q.id for q in random_questions]
 
-        return render(request, 'exam.html', {'questions': random_questions})
+        return render(request, 'exam.html', {
+            'questions': random_questions
+        })
 

@@ -16,11 +16,12 @@
 
         <h3 class="mb-3">Your Score: {{ score }} / {{ total }}</h3>
 
-        {% if score >= total|divisibleby:2 %}
-            <p class="text-success fw-bold">🎉 Good Job! You Passed.</p>
+        {% if passed %}
+            <p class="text-success">Good Job! You Passed 🎉</p>
         {% else %}
-            <p class="text-danger fw-bold">😔 Better Luck Next Time.</p>
+            <p class="text-danger">You Failed. Better Luck Next Time.</p>
         {% endif %}
+
 
         <a href="/exam/" class="btn btn-primary mt-3">Take Exam Again</a>
 
