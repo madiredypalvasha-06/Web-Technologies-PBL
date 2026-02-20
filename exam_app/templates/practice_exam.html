@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ practice_test.title }} - ExamPortal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e293b;
+            --accent: #6366f1;
+            --accent-light: #818cf8;
+            --accent-dark: #4f46e5;
+            --surface: #ffffff;
+            --surface-alt: #f8fafc;
+            --surface-hover: #f1f5f9;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        
+        .exam-header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        }
+        
+        .exam-title {
+            font-size: 22px;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .exam-timer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent);
+            background: rgba(0, 212, 170, 0.1);
+            padding: 10px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 212, 170, 0.2);
+        }
+        
+        .exam-timer.warning {
+            color: var(--danger);
+            background: rgba(255, 71, 87, 0.1);
+            border-color: rgba(255, 71, 87, 0.2);
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .nav-panel {
+            background: var(--surface-elevated);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+        
+        .nav-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+        
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+        
+        .nav-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            background: var(--surface);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .nav-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn.answered {
+            background: var(--gradient);
+            border-color: var(--accent);
+            color: white;
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+        
+        .nav-btn.current {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+        
+        .question-card {
+            background: var(--surface-elevated);
+            border-radius: 24px;
+            padding: 36px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+            animation: slideUp 0.4s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .question-number {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .question-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            color: var(--text-muted);
+        }
+        
+        .btn-icon:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        
+        .btn-icon.bookmarked {
+            background: var(--gradient);
+            color: white;
+            border-color: var(--accent);
+        }
+        
+        .question-text {
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 1.7;
+            margin-bottom: 28px;
+            color: var(--text);
+        }
+        
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 18px 22px;
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--surface);
+        }
+        
+        .option-label:hover {
+            border-color: var(--accent);
+            background: rgba(0, 212, 170, 0.05);
+            transform: translateX(4px);
+        }
+        
+        .option-label.selected {
+            border-color: var(--accent);
+            background: rgba(0, 212, 170, 0.1);
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
+        
+        .option-label input { display: none; }
+        
+        .option-radio {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+        
+        .option-label.selected .option-radio {
+            border-color: var(--accent);
+            background: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-glow);
+        }
+        
+        .option-label.selected .option-radio::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            animation: scaleIn 0.2s ease;
+        }
+        
+        @keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+        
+        .option-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text);
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .btn-nav {
+            padding: 14px 32px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-family: 'Outfit', sans-serif;
+        }
+        
+        .btn-prev {
+            background: var(--surface-elevated);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-prev:hover {
+            background: var(--surface-hover);
+            border-color: var(--text-muted);
+        }
+        
+        .btn-next, .btn-submit {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 8px 25px var(--accent-glow);
+        }
+        
+        .btn-next:hover, .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px var(--accent-glow);
+        }
+        
+        .btn-back {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+        
+        .btn-back:hover {
+            color: var(--accent);
+        }
+        
+        @media (max-width: 600px) {
+            .nav-grid { grid-template-columns: repeat(4, 1fr); }
+            .question-card { padding: 24px; }
+            .exam-header { padding: 16px 20px; flex-direction: column; gap: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <form id="examForm" method="POST" action="{% url 'submit_practice_test' %}">
+        {% csrf_token %}
+        <input type="hidden" name="session_id" value="{{ session.id }}">
+        <input type="hidden" name="answers" id="answersInput" value="{}">
+        
+        <header class="exam-header">
+            <div>
+                <a href="{% url 'practice_hub' %}" class="btn-back"><i class="bi bi-arrow-left"></i> Exit</a>
+            </div>
+            <h1 class="exam-title">{{ practice_test.title }}</h1>
+            <div class="exam-timer" id="timer">
+                <i class="bi bi-clock"></i>
+                <span id="timerDisplay">{% if practice_test.is_timed %}{{ practice_test.time_limit_minutes }}:00{% else %}Untimed{% endif %}</span>
+            </div>
+        </header>
+        
+        <div class="container">
+            <div class="nav-panel">
+                <div class="nav-title">Question Navigator</div>
+                <div class="nav-grid">
+                    {% for q in questions %}
+                    <button type="button" class="nav-btn" data-qid="{{ q.id }}" onclick="goToQuestion({{ forloop.counter0 }})">{{ forloop.counter }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div id="questionsContainer">
+                {% for q in questions %}
+                <div class="question-card" id="question{{ forloop.counter0 }}" style="{% if forloop.counter0 > 0 %}display:none{% endif %}">
+                    <div class="question-header">
+                        <span class="question-number">Question {{ forloop.counter }} of {{ questions|length }}</span>
+                        <div class="question-actions">
+                            <button type="button" class="btn-icon {% if q.id in is_bookmarked %}bookmarked{% endif %}" onclick="toggleBookmark({{ q.id }})" title="Bookmark"><i class="bi bi-bookmark{% if q.id in is_bookmarked %}-fill{% endif %}"></i></button>
+                        </div>
+                    </div>
+                    <p class="question-text">{{ q.question_text }}</p>
+                    <div class="options-list">
+                        <label class="option-label" onclick="selectOption({{ forloop.counter0 }}, '{{ q.option1|escapejs }}', this)">
+                            <input type="radio" name="question_{{ q.id }}" value="{{ q.option1|escapejs }}">
+                            <span class="option-radio"></span>
+                            <span class="option-text">{{ q.option1 }}</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption({{ forloop.counter0 }}, '{{ q.option2|escapejs }}', this)">
+                            <input type="radio" name="question_{{ q.id }}" value="{{ q.option2|escapejs }}">
+                            <span class="option-radio"></span>
+                            <span class="option-text">{{ q.option2 }}</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption({{ forloop.counter0 }}, '{{ q.option3|escapejs }}', this)">
+                            <input type="radio" name="question_{{ q.id }}" value="{{ q.option3|escapejs }}">
+                            <span class="option-radio"></span>
+                            <span class="option-text">{{ q.option3 }}</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption({{ forloop.counter0 }}, '{{ q.option4|escapejs }}', this)">
+                            <input type="radio" name="question_{{ q.id }}" value="{{ q.option4|escapejs }}">
+                            <span class="option-radio"></span>
+                            <span class="option-text">{{ q.option4 }}</span>
+                        </label>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 24px;">
+                        {% if forloop.counter0 > 0 %}
+                        <button type="button" class="btn-nav btn-prev" onclick="goToQuestion({{ forloop.counter0|add:'-1' }})">Previous</button>
+                        {% else %}
+                        <div></div>
+                        {% endif %}
+                        {% if forloop.counter0 < questions|length|add:'-1' %}
+                        <button type="button" class="btn-nav btn-next" onclick="goToQuestion({{ forloop.counter0|add:'1' }})">Next</button>
+                        {% else %}
+                        <button type="button" class="btn-nav btn-next" onclick="submitExam()">Submit Test</button>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </form>
+    
+    <script>
+        let currentQuestion = 0;
+        let answers = {};
+        const totalQuestions = {{ questions|length }};
+        const isTimed = {{ practice_test.is_timed|yesno:'true,false' }};
+        let timeLeft = {{ practice_test.time_limit_minutes|default:0 }} * 60;
+        
+        let questionIds = [{% for q in questions %}{{ q.id }}{% if not forloop.last %},{% endif %}{% endfor %}];
+        
+        function goToQuestion(index) {
+            if (index < 0 || index >= totalQuestions) return;
+            document.getElementById('question' + currentQuestion).style.display = 'none';
+            currentQuestion = index;
+            document.getElementById('question' + currentQuestion).style.display = 'block';
+            updateNavButtons();
+        }
+        
+        function selectOption(qIndex, option, label) {
+            document.querySelectorAll('#question' + qIndex + ' .option-label').forEach(l => l.classList.remove('selected'));
+            label.classList.add('selected');
+            const qId = questionIds[qIndex];
+            answers[qId] = option;
+            document.querySelectorAll('.nav-btn')[qIndex].classList.add('answered');
+            document.getElementById('answersInput').value = JSON.stringify(answers);
+        }
+        
+        function updateNavButtons() {
+            document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+                btn.classList.toggle('current', i === currentQuestion);
+            });
+        }
+        
+        function toggleBookmark(questionId) {
+            fetch('{% url "toggle_bookmark" %}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': '{{ csrf_token }}' },
+                body: 'question_id=' + questionId
+            }).then(r => r.json()).then(data => {
+                const btn = event.target.closest('.btn-icon');
+                if (data.bookmarked) {
+                    btn.classList.add('bookmarked');
+                    btn.innerHTML = '<i class="bi bi-bookmark-fill"></i>';
+                } else {
+                    btn.classList.remove('bookmarked');
+                    btn.innerHTML = '<i class="bi bi-bookmark"></i>';
+                }
+            });
+        }
+        
+        function submitExam() {
+            if (Object.keys(answers).length < totalQuestions) {
+                if (!confirm('You have not answered all questions. Are you sure you want to submit?')) return;
+            }
+            document.getElementById('answersInput').value = JSON.stringify(answers);
+            document.getElementById('examForm').submit();
+        }
+        
+        if (isTimed) {
+            setInterval(() => {
+                timeLeft--;
+                const mins = Math.floor(timeLeft / 60);
+                const secs = timeLeft % 60;
+                document.getElementById('timerDisplay').textContent = mins + ':' + (secs < 10 ? '0' : '') + secs;
+                if (timeLeft <= 300) document.getElementById('timer').classList.add('warning');
+                if (timeLeft <= 0) submitExam();
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

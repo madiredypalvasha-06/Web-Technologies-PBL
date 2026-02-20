@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - ExamPortal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2d2d2d;
+            --accent: #c9a227;
+            --surface: #ffffff;
+            --text: #2d2d2d;
+            --text-muted: #6b6b6b;
+            --success: #16a34a;
+            --info: #2563eb;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: #f5f0e5;
+            color: var(--text);
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 260px;
+            background: #2d2d2d;
+            min-height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-header {
+            padding: 28px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .logo span { color: #c9a227; }
+        
+        .user-badge {
+            background: rgba(201,162,39,0.2);
+            color: #c9a227;
+            padding: 8px 14px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            display: inline-block;
+            margin-top: 12px;
+            border: 1px solid #c9a227;
+        }
+        
+        .nav-menu {
+            padding: 20px 12px;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            color: #aaa;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background: #c9a227;
+            color: #2d2d2d;
+        }
+        
+        .main-content {
+            margin-left: 260px;
+            padding: 32px;
+            min-height: 100vh;
+        }
+        
+        .welcome-section {
+            margin-bottom: 32px;
+        }
+        
+        .welcome-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: #2d2d2d;
+            margin-bottom: 8px;
+        }
+        
+        .welcome-subtitle {
+            color: #6b6b6b;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+        
+        .stat-card {
+            background: white;
+            border: 2px solid #2d2d2d;
+            border-radius: 4px;
+            padding: 24px;
+            box-shadow: 6px 6px 0px 0px #2d2d2d;
+        }
+        
+        .stat-card h5 {
+            color: #6b6b6b;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: #2d2d2d;
+        }
+        
+        .card {
+            background: white;
+            border: 2px solid #2d2d2d;
+            border-radius: 4px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 6px 6px 0px 0px #2d2d2d;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #2d2d2d;
+        }
+        
+        .exam-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .exam-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 20px;
+            background: #f5f0e5;
+            border: 2px solid #2d2d2d;
+            border-radius: 4px;
+        }
+        
+        .exam-item:hover {
+            background: white;
+            box-shadow: 4px 4px 0px 0px #2d2d2d;
+        }
+        
+        .exam-info h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #2d2d2d;
+        }
+        
+        .exam-info p {
+            color: #6b6b6b;
+            font-size: 13px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            border: 2px solid #2d2d2d;
+        }
+        
+        .btn-primary {
+            background: #2d2d2d;
+            color: white;
+            border: 2px solid #2d2d2d;
+        }
+        
+        .btn-primary:hover {
+            background: #c9a227;
+            color: #2d2d2d;
+            border-color: #c9a227;
+            box-shadow: 4px 4px 0px 0px #2d2d2d;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table th {
+            text-align: left;
+            padding: 12px 16px;
+            color: #6b6b6b;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #2d2d2d;
+        }
+        
+        .table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #f5f0e5;
+            font-size: 14px;
+            color: #2d2d2d;
+        }
+        
+        .badge {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge-success { background: #dcfce7; color: #16a34a; }
+        .badge-danger { background: #fee2e2; color: #dc2626; }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #6b6b6b;
+        }
+        
+        .empty-state i {
+            font-size: 40px;
+            margin-bottom: 12px;
+            color: #c9a227;
+        }
+        
+        .alert {
+            padding: 16px 20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border: 2px solid;
+        }
+        
+        .alert-error { background: #fee2e2; color: #dc2626; border-color: #dc2626; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">Exam<span>Portal</span></div>
+            <span class="user-badge">{{ student.student_id }}</span>
+        </div>
+        <nav class="nav-menu">
+            <a href="{% url 'student_dashboard' %}" class="nav-item active"><i class="bi bi-grid-1x2"></i> Dashboard</a>
+            <a href="{% url 'practice_hub' %}" class="nav-item"><i class="bi bi-lightning-charge"></i> Practice Hub</a>
+            <a href="{% url 'my_results' %}" class="nav-item"><i class="bi bi-bar-chart"></i> My Results</a>
+            <a href="{% url 'logout' %}" class="nav-item"><i class="bi bi-box-arrow-right"></i> Logout</a>
+        </nav>
+    </div>
+    
+    <div class="main-content">
+        <div class="welcome-section">
+            <h1 class="welcome-title">Welcome back, {{ student.user.get_full_name|default:student.user.username }}!</h1>
+            <p class="welcome-subtitle">Ready to ace your exams?</p>
+        </div>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h5>Available Exams</h5>
+                <h2>{{ available_exams|length }}</h2>
+            </div>
+            <div class="stat-card">
+                <h5>Completed</h5>
+                <h2>{{ completed_count }}</h2>
+            </div>
+            <div class="stat-card">
+                <h5>Total Attempts</h5>
+                <h2>{{ results.count }}</h2>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3 class="card-title">Available Exams</h3>
+            {% if available_exams %}
+                <div class="exam-list">
+                    {% for exam in available_exams %}
+                        <div class="exam-item">
+                            <div class="exam-info">
+                                <h4>{{ exam.title }}</h4>
+                                <p>{{ exam.duration_minutes }} mins | {{ exam.number_of_questions }} questions</p>
+                            </div>
+                            <a href="{% url 'start_exam' exam.id %}" class="btn btn-primary">Start Exam</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <i class="bi bi-calendar-x" style="font-size: 40px; margin-bottom: 12px;"></i>
+                    <p>No exams available currently. Check back later!</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="card">
+            <h3 class="card-title">Recent Results</h3>
+            {% if results %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Exam</th>
+                            <th>Score</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for result in results %}
+                            <tr>
+                                <td>{{ result.exam.title }}</td>
+                                <td>{{ result.score }}%</td>
+                                <td>
+                                    {% if result.passed %}
+                                        <span class="badge badge-success">Passed</span>
+                                    {% else %}
+                                        <span class="badge badge-danger">Failed</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    <i class="bi bi-award" style="font-size: 40px; margin-bottom: 12px;"></i>
+                    <p>No results yet. Take your first exam!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

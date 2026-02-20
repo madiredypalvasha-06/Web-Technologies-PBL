@@ -1,32 +1,302 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Exam Result</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Result - ExamPortal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2d2d2d;
+            --accent: #c9a227;
+            --surface: #ffffff;
+            --text: #2d2d2d;
+            --text-muted: #6b6b6b;
+            --border: #2d2d2d;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: #f5f0e5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        
+        .result-card {
+            background: white;
+            border: 3px solid #2d2d2d;
+            border-radius: 4px;
+            padding: 56px 48px;
+            text-align: center;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 10px 10px 0px 0px #2d2d2d;
+        }
+        
+        .result-icon {
+            width: 120px;
+            height: 120px;
+            border-radius: 4px;
+            border: 3px solid #2d2d2d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 28px;
+            font-size: 56px;
+        }
+        
+        .result-icon.success {
+            background: #c9a227;
+            color: #2d2d2d;
+        }
+        
+        .result-icon.fail {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .result-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #2d2d2d;
+        }
+        
+        .result-subtitle {
+            color: #6b6b6b;
+            font-size: 16px;
+            margin-bottom: 36px;
+            font-weight: 500;
+        }
+        
+        .score-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 36px;
+        }
+        
+        .score-box {
+            background: #f5f0e5;
+            border: 2px solid #2d2d2d;
+            border-radius: 4px;
+            padding: 24px;
+        }
+        
+        .score-box h4 {
+            color: #6b6b6b;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        
+        .score-box h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 700;
+        }
+        
+        .score-box.success h2 { color: #16a34a; }
+        .score-box.primary h2 { color: #c9a227; }
+        .score-box.danger h2 { color: #dc2626; }
+        
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 36px;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #6b6b6b;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .stat-item i { font-size: 18px; }
+        
+        .stat-item.correct { color: #16a34a; }
+        .stat-item.wrong { color: #dc2626; }
+        
+        .btn-primary {
+            display: inline-block;
+            background: #2d2d2d;
+            color: white;
+            border: 2px solid #2d2d2d;
+            padding: 16px 40px;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: #c9a227;
+            color: #2d2d2d;
+            border-color: #c9a227;
+            box-shadow: 4px 4px 0px 0px #2d2d2d;
+        }
+        
+        .exam-name {
+            font-size: 14px;
+            color: #6b6b6b;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
 
-    <!-- Bootstrap CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        .violations-section {
+            background: #fef3c7;
+            border: 2px solid #d97706;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+
+        .violations-section h4 {
+            color: #92400e;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .violation-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #d97706;
+            font-size: 14px;
+            color: #7c2d12;
+        }
+
+        .violation-item:last-child {
+            border-bottom: none;
+        }
+
+        .violation-item .count {
+            font-weight: 700;
+            color: #dc2626;
+        }
+
+        .no-violations {
+            color: #16a34a;
+            font-weight: 600;
+        }
+    </style>
 </head>
+<body>
+    <div class="result-card">
+        <div class="result-icon {% if passed %}success{% else %}fail{% endif %}">
+            {% if passed %}
+                <i class="bi bi-trophy"></i>
+            {% else %}
+                <i class="bi bi-emoji-frown"></i>
+            {% endif %}
+        </div>
+        
+        <p class="exam-name">{{ exam_title }}</p>
+        
+        <h1 class="result-title">
+            {% if passed %}
+                Congratulations!
+            {% else %}
+                Keep Trying!
+            {% endif %}
+        </h1>
+        
+        <p class="result-subtitle">
+            {% if passed %}
+                You passed the exam successfully
+            {% else %}
+                Better luck next time
+            {% endif %}
+        </p>
+        
+        <div class="score-grid">
+            <div class="score-box success">
+                <h4>Score</h4>
+                <h2>{{ score }} / {{ total }}</h2>
+            </div>
+            <div class="score-box primary">
+                <h4>Percentage</h4>
+                <h2>{{ percentage }}%</h2>
+            </div>
+        </div>
+        
+        <div class="stats-row">
+            <div class="stat-item correct">
+                <i class="bi bi-check-circle-fill"></i>
+                {{ correct }} Correct
+            </div>
+            <div class="stat-item wrong">
+                <i class="bi bi-x-circle-fill"></i>
+                {{ wrong }} Wrong
+            </div>
+            <div class="stat-item">
+                <i class="bi bi-clock"></i>
+                {{ time_taken }}s
+            </div>
+        </div>
 
-<body class="bg-light">
-
-<div class="container mt-5">
-    <div class="card shadow p-4 text-center">
-
-        <h2 class="mb-3">Exam Completed</h2>
-
-        <h3 class="mb-3">Your Score: {{ score }} / {{ total }}</h3>
-
-        {% if passed %}
-            <p class="text-success">Good Job! You Passed 🎉</p>
-        {% else %}
-            <p class="text-danger">You Failed. Better Luck Next Time.</p>
+        {% if total_violations > 0 %}
+        <div class="violations-section">
+            <h4><i class="bi bi-exclamation-triangle-fill"></i> Malpractice Violations</h4>
+            {% if violations_data.tabSwitch > 0 %}
+            <div class="violation-item">
+                <span>Tab Switches</span>
+                <span class="count">{{ violations_data.tabSwitch }}</span>
+            </div>
+            {% endif %}
+            {% if violations_data.copyPaste > 0 %}
+            <div class="violation-item">
+                <span>Copy/Paste Attempts</span>
+                <span class="count">{{ violations_data.copyPaste }}</span>
+            </div>
+            {% endif %}
+            {% if violations_data.rightClick > 0 %}
+            <div class="violation-item">
+                <span>Right-click Attempts</span>
+                <span class="count">{{ violations_data.rightClick }}</span>
+            </div>
+            {% endif %}
+            {% if violations_data.focusLost > 0 %}
+            <div class="violation-item">
+                <span>Window Focus Lost</span>
+                <span class="count">{{ violations_data.focusLost }}</span>
+            </div>
+            {% endif %}
+            {% if violations_data.screenshot > 0 %}
+            <div class="violation-item">
+                <span>Screenshot Attempts</span>
+                <span class="count">{{ violations_data.screenshot }}</span>
+            </div>
+            {% endif %}
+        </div>
         {% endif %}
 
-
-        <a href="/exam/" class="btn btn-primary mt-3">Take Exam Again</a>
-
+        <a href="{% url 'student_dashboard' %}" class="btn-primary">Back to Dashboard</a>
     </div>
-</div>
-
 </body>
 </html>

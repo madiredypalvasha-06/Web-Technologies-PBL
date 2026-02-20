@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ExamPortal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --primary: #2d2d2d;
+            --accent: #c9a227;
+            --surface: #ffffff;
+            --surface-alt: #f9f7f2;
+            --text: #2d2d2d;
+            --text-muted: #6b6b6b;
+            --border: #2d2d2d;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: #f5f0e5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+        }
+        
+        .login-card {
+            background: white;
+            border: 3px solid #2d2d2d;
+            border-radius: 4px;
+            padding: 48px 40px;
+            box-shadow: 10px 10px 0px 0px #2d2d2d;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .logo-icon {
+            width: 56px;
+            height: 56px;
+            background: #2d2d2d;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-icon i {
+            font-size: 28px;
+            color: #c9a227;
+        }
+        
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: #2d2d2d;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #6b6b6b;
+            font-size: 15px;
+            margin-bottom: 36px;
+            font-weight: 500;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #2d2d2d;
+            margin-bottom: 8px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 16px 18px;
+            border: 2px solid #2d2d2d;
+            border-radius: 4px;
+            font-size: 15px;
+            font-family: 'Source Sans 3', sans-serif;
+            transition: all 0.2s;
+            background: #f9f7f2;
+            color: #2d2d2d;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #c9a227;
+            background: white;
+            box-shadow: 4px 4px 0px 0px rgba(201, 162, 39, 0.2);
+        }
+        
+        .form-group input::placeholder {
+            color: #a0a0a0;
+        }
+        
+        .btn-primary {
+            width: 100%;
+            padding: 18px 32px;
+            background: #2d2d2d;
+            border: 2px solid #2d2d2d;
+            border-radius: 4px;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: 'Source Sans 3', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .btn-primary:hover {
+            background: #c9a227;
+            border-color: #c9a227;
+            color: #2d2d2d;
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0px 0px #2d2d2d;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 28px 0;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: #2d2d2d;
+        }
+        
+        .divider span {
+            padding: 0 16px;
+            color: #6b6b6b;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .register-link {
+            text-align: center;
+            color: #6b6b6b;
+            font-size: 15px;
+        }
+        
+        .register-link a {
+            color: #c9a227;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 32px;
+            padding-top: 28px;
+            border-top: 2px solid #2d2d2d;
+        }
+        
+        .feature {
+            text-align: center;
+            color: #6b6b6b;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .feature i {
+            display: block;
+            font-size: 24px;
+            margin-bottom: 6px;
+            color: #c9a227;
+        }
+        
+        .alert {
+            padding: 14px 18px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border: 2px solid;
+        }
+        
+        .alert-danger {
+            background: #fff5f5;
+            color: #c0392b;
+            border-color: #c0392b;
+        }
+        
+        .alert-success {
+            background: #f0f9f4;
+            color: #27ae60;
+            border-color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="bi bi-mortarboard-fill"></i>
+                </div>
+                <span class="logo-text">ExamPortal</span>
+            </div>
+            <p class="subtitle">Your Gateway to Success</p>
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn-primary">Sign In</button>
+            </form>
+            
+            <div class="divider"><span>Or</span></div>
+            
+            <p class="register-link">Don't have an account? <a href="{% url 'register' %}">Create one</a></p>
+            
+            <div class="features">
+                <div class="feature"><i class="bi bi-shield-check"></i> Secure</div>
+                <div class="feature"><i class="bi bi-lightning-charge"></i> Fast</div>
+                <div class="feature"><i class="bi bi-graph-up"></i> Track</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

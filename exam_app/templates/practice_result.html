@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Result - ExamPortal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root { --primary: #0f172a; --accent: #10b981; --surface: #ffffff; --text: #0f172a; --text-muted: #64748b; --border: #e2e8f0; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --info: #3b82f6; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--surface-alt); color: var(--text); min-height: 100vh; }
+        .navbar { background: var(--primary); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; }
+        .navbar-brand { color: white; font-size: 24px; font-weight: 800; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+        .navbar-brand i { color: var(--accent); }
+        .container { max-width: 900px; margin: 0 auto; padding: 32px; }
+        .result-card { background: white; border-radius: 24px; padding: 40px; text-align: center; margin-bottom: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .result-icon { width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 56px; }
+        .result-icon.excellent { background: rgba(16,185,129,0.2); color: var(--success); }
+        .result-icon.good { background: rgba(59,130,246,0.2); color: var(--info); }
+        .result-icon.needs-work { background: rgba(245,158,11,0.2); color: var(--warning); }
+        .result-title { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+        .result-subtitle { color: var(--text-muted); font-size: 16px; margin-bottom: 32px; }
+        .score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+        .score-box { background: var(--surface-alt); border-radius: 14px; padding: 20px; }
+        .score-box h4 { color: var(--text-muted); font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+        .score-box h2 { font-size: 28px; font-weight: 800; }
+        .score-box.success h2 { color: var(--success); }
+        .score-box.danger h2 { color: var(--danger); }
+        .score-box.primary h2 { color: var(--info); }
+        .btn-group { display: flex; gap: 16px; justify-content: center; }
+        .btn { padding: 14px 28px; border-radius: 12px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: #059669; }
+        .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); }
+        .btn-outline:hover { border-color: var(--accent); }
+        .section-card { background: white; border-radius: 20px; padding: 28px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+        .section-title { font-size: 20px; font-weight: 700; margin-bottom: 24px; }
+        .question-review { padding: 20px; border: 2px solid var(--border); border-radius: 14px; margin-bottom: 16px; }
+        .question-review.correct { border-color: var(--success); background: rgba(16,185,129,0.05); }
+        .question-review.wrong { border-color: var(--danger); background: rgba(239,68,68,0.05); }
+        .question-text { font-weight: 600; margin-bottom: 16px; }
+        .answer-row { display: flex; gap: 12px; margin-bottom: 8px; font-size: 14px; }
+        .answer-label { font-weight: 600; min-width: 80px; }
+        .answer-value.correct { color: var(--success); }
+        .answer-value.wrong { color: var(--danger); }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{% url 'student_dashboard' %}" class="navbar-brand"><i class="bi bi-mortarboard-fill"></i> ExamPortal</a>
+    </nav>
+    <div class="container">
+        <div class="result-card">
+            {% if percentage >= 80 %}
+            <div class="result-icon excellent"><i class="bi bi-trophy"></i></div>
+            <h1 class="result-title">Excellent!</h1>
+            <p class="result-subtitle">Great job! You've mastered this topic</p>
+            {% elif percentage >= 50 %}
+            <div class="result-icon good"><i class="bi bi-emoji-smile"></i></div>
+            <h1 class="result-title">Good Job!</h1>
+            <p class="result-subtitle">Keep practicing to improve further</p>
+            {% else %}
+            <div class="result-icon needs-work"><i class="bi bi-emoji-frown"></i></div>
+            <h1 class="result-title">Keep Trying!</h1>
+            <p class="result-subtitle">Review your answers and practice more</p>
+            {% endif %}
+            <div class="score-grid">
+                <div class="score-box success">
+                    <h4>Score</h4>
+                    <h2>{{ score }} / {{ total }}</h2>
+                </div>
+                <div class="score-box primary">
+                    <h4>Percentage</h4>
+                    <h2>{{ percentage }}%</h2>
+                </div>
+                <div class="score-box success">
+                    <h4>Correct</h4>
+                    <h2>{{ correct }}</h2>
+                </div>
+                <div class="score-box danger">
+                    <h4>Wrong</h4>
+                    <h2>{{ wrong }}</h2>
+                </div>
+            </div>
+            <div class="btn-group">
+                <a href="{% url 'practice_tests' %}" class="btn btn-primary"><i class="bi bi-arrow-repeat"></i> Practice Again</a>
+                <a href="{% url 'practice_hub' %}" class="btn btn-outline"><i class="bi bi-house"></i> Back to Hub</a>
+            </div>
+        </div>
+        {% if show_answers %}
+        <div class="section-card">
+            <h2 class="section-title">Review Answers</h2>
+            {% for q in questions %}
+            <div class="question-review {% if q.correct_answer in session.answers|default:'' %}{% if session.answers|default:'' == q.correct_answer %}correct{% else %}wrong{% endif %}{% endif %}">
+                <p class="question-text">Q{{ forloop.counter }}. {{ q.question_text }}</p>
+                {% if session.answers %}
+                <div class="answer-row">
+                    <span class="answer-label">Your Answer:</span>
+                    <span class="answer-value {% if session.answers|default:'' == q.correct_answer %}correct{% else %}wrong{% endif %}">{{ session.answers|default:'Not answered' }}</span>
+                </div>
+                {% endif %}
+                <div class="answer-row">
+                    <span class="answer-label">Correct:</span>
+                    <span class="answer-value correct">{{ q.correct_answer }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

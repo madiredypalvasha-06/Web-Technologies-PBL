@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worksheets - ExamPortal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root { --primary: #2d2d2d; --accent: #c9a227; --surface: #ffffff; --text: #2d2d2d; --text-muted: #6b6b6b; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Source Sans 3', sans-serif; background: #f5f0e5; color: var(--text); min-height: 100vh; }
+        .header { background: #2d2d2d; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 12px; }
+        .logo-icon { width: 40px; height: 40px; background: #c9a227; display: flex; align-items: center; justify-content: center; color: #2d2d2d; font-size: 18px; }
+        .logo-text { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: white; }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-link { color: #aaa; text-decoration: none; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-link:hover { color: #c9a227; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+        .page-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: #2d2d2d; margin-bottom: 32px; }
+        .card { background: white; border: 2px solid #2d2d2d; padding: 24px; margin-bottom: 20px; box-shadow: 6px 6px 0px 0px #2d2d2d; }
+        .card h3 { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #2d2d2d; margin-bottom: 8px; }
+        .card p { color: #6b6b6b; font-size: 14px; margin-bottom: 12px; }
+        .badge { padding: 4px 8px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border: 2px solid; }
+        .badge-easy { background: #ecfdf5; color: #059669; border-color: #059669; }
+        .badge-medium { background: #fffbeb; color: #d97706; border-color: #d97706; }
+        .badge-hard { background: #fef2f2; color: #dc2626; border-color: #dc2626; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: #2d2d2d; text-decoration: none; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 14px; margin-bottom: 24px; }
+        .back-link:hover { color: #c9a227; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo"><div class="logo-icon"><i class="bi bi-mortarboard-fill"></i></div><span class="logo-text">ExamPortal</span></div>
+        <nav class="nav-links">
+            <a href="{% url 'practice_hub' %}" class="nav-link">Practice Hub</a>
+            <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+        </nav>
+    </header>
+    <div class="container">
+        <a href="{% url 'practice_hub' %}" class="back-link"><i class="bi bi-arrow-left"></i> Back</a>
+        <h1 class="page-title">Worksheets</h1>
+        {% for ws in worksheets %}
+        <div class="card">
+            <h3>{{ ws.title }}</h3>
+            <p>{{ ws.description }}</p>
+            <span class="badge badge-{{ ws.difficulty }}">{{ ws.difficulty }}</span>
+            <span style="color: #6b6b6b; font-size: 13px;">{{ ws.number_of_questions }} Questions</span>
+        </div>
+        {% empty %}
+        <p>No worksheets available.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>

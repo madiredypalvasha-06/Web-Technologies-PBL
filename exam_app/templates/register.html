@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - ExamPortal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2d2d2d;
+            --accent: #c9a227;
+            --accent-hover: #d4b42d;
+            --surface: #ffffff;
+            --surface-alt: #f5f0e5;
+            --text: #2d2d2d;
+            --text-muted: #6b6b6b;
+            --border: #2d2d2d;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: #f5f0e5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+        }
+        
+        .register-container {
+            width: 100%;
+            max-width: 520px;
+        }
+        
+        .register-card {
+            background: white;
+            border: 3px solid #2d2d2d;
+            border-radius: 4px;
+            padding: 40px;
+            box-shadow: 10px 10px 0px 0px #2d2d2d;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: #c9a227;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2d2d2d;
+            font-size: 22px;
+        }
+        
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 700;
+            color: #2d2d2d;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #6b6b6b;
+            font-size: 14px;
+            margin-bottom: 32px;
+            font-weight: 500;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-group label {
+            display: block;
+            color: #2d2d2d;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            background: #f5f0e5;
+            border: 2px solid #2d2d2d;
+            border-radius: 4px;
+            color: #2d2d2d;
+            font-size: 14px;
+            font-family: inherit;
+            font-weight: 500;
+            transition: all 0.25s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #c9a227;
+            background: #fff;
+            box-shadow: 4px 4px 0px 0px rgba(201, 162, 39, 0.2);
+        }
+        
+        .form-group input::placeholder {
+            color: #a0a0a0;
+        }
+        
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: #2d2d2d;
+            border: 2px solid #2d2d2d;
+            border-radius: 4px;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+        
+        .btn-primary:hover {
+            background: #c9a227;
+            color: #2d2d2d;
+            border-color: #c9a227;
+            box-shadow: 4px 4px 0px 0px #2d2d2d;
+        }
+        
+        .login-link {
+            text-align: center;
+            color: #6b6b6b;
+            font-size: 14px;
+            margin-top: 24px;
+            font-weight: 500;
+        }
+        
+        .login-link a {
+            color: #c9a227;
+            text-decoration: none;
+            font-weight: 700;
+        }
+        
+        .login-link a:hover {
+            color: #2d2d2d;
+        }
+        
+        .alert {
+            padding: 14px 18px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 2px solid;
+        }
+        
+        .alert-error {
+            background: #fee2e2;
+            border-color: #dc2626;
+            color: #dc2626;
+        }
+        
+        .alert-success {
+            background: #dcfce7;
+            border-color: #16a34a;
+            color: #16a34a;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-card">
+            <div class="logo">
+                <div class="logo-icon"><i class="bi bi-mortarboard"></i></div>
+                <span class="logo-text">ExamPortal</span>
+            </div>
+            <p class="subtitle">Create your student account</p>
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" name="first_name" placeholder="John" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" name="last_name" placeholder="Doe" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" placeholder="johndoe" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="john@example.com" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Student ID</label>
+                        <input type="text" name="student_id" placeholder="STU001" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Department</label>
+                        <input type="text" name="department" placeholder="Computer Science">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="password" placeholder="••••••••" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <input type="password" name="confirm_password" placeholder="••••••••" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">Create Account</button>
+            </form>
+            
+            <p class="login-link">Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+        </div>
+    </div>
+</body>
+</html>
