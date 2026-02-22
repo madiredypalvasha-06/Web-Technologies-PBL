@@ -82,13 +82,8 @@ def student_dashboard(request):
     today = date.today()
     current_time = datetime.now().time()
     
-    # Get available exams (active, today, within time window)
-    available_exams = Exam.objects.filter(
-        is_active=True,
-        exam_date=today
-    ).filter(
-        Q(start_time__lte=current_time) & Q(end_time__gte=current_time)
-    )
+    # Get available exams (all active exams)
+    available_exams = Exam.objects.filter(is_active=True)
     
     # Filter out completed exams
     completed_sessions = ExamSession.objects.filter(student=student, is_completed=True)
