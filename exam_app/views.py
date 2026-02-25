@@ -379,7 +379,7 @@ def start_exam(request, exam_id):
         percentage = int((score / total_marks) * 100) if total_marks > 0 else 0
         passed = percentage >= exam.passing_percentage
         
-        time_taken = (timezone.now() - session.started_at).total_seconds()
+        time_taken = int((timezone.now() - session.started_at).total_seconds() / 60)
         
         session.score = score
         session.total_marks = total_marks

@@ -240,8 +240,12 @@
         // Window focus
         window.onblur = () => logViolation('focusLost', 'Window focus lost!');
         
-        // Disable right-click
-        document.oncontextmenu = (e) => { e.preventDefault(); logViolation('rightClick', 'Right-click BLOCKED!'); };
+        // Disable right-click (more robust for Mac)
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            logViolation('rightClick', 'Right-click BLOCKED!');
+            return false;
+        });
         
         // Disable copy/paste
         document.oncopy = (e) => { e.preventDefault(); logViolation('copyPaste', 'COPY BLOCKED!'); };
