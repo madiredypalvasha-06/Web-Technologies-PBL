@@ -123,11 +123,11 @@ for cat, q, a1, a2, a3, a4, correct in questions_data:
         question_text=q,
         defaults={
             'category': cat,
-            'option_a': a1,
-            'option_b': a2,
-            'option_c': a3,
-            'option_d': a4,
-            'correct_option': correct,
+            'option1': a1,
+            'option2': a2,
+            'option3': a3,
+            'option4': a4,
+            'correct_answer': correct,
             'marks': 1,
             'difficulty': 'Medium'
         }
