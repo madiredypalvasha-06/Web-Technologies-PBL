@@ -82,36 +82,34 @@ def student_dashboard(request):
     today = date.today()
     current_time = datetime.now().time()
     
-    # Get available exams (all active exams)
-    available_exams = Exam.objects.filter(is_active=True)
+    # Get all active exams with completion status
+    all_exams = Exam.objects.filter(is_active=True)
     
-    # Filter out completed exams
-    completed_sessions = ExamSession.objects.filter(student=student, is_completed=True)
-    available_exams = [exam for exam in available_exams if not completed_sessions.filter(exam=exam).exists()]
+    # Check which exams are completed
+    completed_exam_ids = set(ExamSession.objects.filter(student=student, is_completed=True).values_list('exam_id', flat=True))
+    
+    # Add completion status to each exam
+    exams_with_status = []
+    for exam in all_exams:
+        exam.is_completed = exam.id in completed_exam_ids
+        exams_with_status.append(exam)
     
     # Get results with stats
     results = Result.objects.filter(student=student).order_by('-submitted_at')[:10]
-    completed_count = completed_sessions.count()
+    completed_count = len(completed_exam_ids)
     
     total_passed = Result.objects.filter(student=student, passed=True).count()
     total_attempts = Result.objects.filter(student=student).count()
     avg_score = Result.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0
     
-    # Get upcoming exams
-    upcoming_exams = Exam.objects.filter(
-        is_active=True,
-        exam_date__gte=today
-    ).order_by('exam_date', 'start_time')[:5]
-    
     return render(request, 'student_app.html', {
         'student': student,
-        'available_exams': available_exams,
+        'available_exams': exams_with_status,
         'results': results,
         'completed_count': completed_count,
         'total_passed': total_passed,
         'total_attempts': total_attempts,
-        'avg_score': round(avg_score, 1),
-        'upcoming_exams': upcoming_exams
+        'avg_score': round(avg_score, 1)
     })
 
 @login_required

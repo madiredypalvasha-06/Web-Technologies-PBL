@@ -435,7 +435,11 @@
                                 <span><i class="bi bi-question-circle"></i> {{ exam.number_of_questions }} Qs</span>
                             </div>
                         </div>
+                        {% if exam.is_completed %}
+                        <a href="{% url 'start_exam' exam.id %}" class="btn-start">Retake</a>
+                        {% else %}
                         <a href="{% url 'start_exam' exam.id %}" class="btn-start">Start</a>
+                        {% endif %}
                     </div>
                     {% endfor %}
                 </div>
@@ -481,7 +485,11 @@
                             <span><i class="bi bi-question-circle"></i> {{ exam.number_of_questions }} Qs</span>
                         </div>
                     </div>
+                    {% if exam.is_completed %}
+                    <a href="{% url 'start_exam' exam.id %}" class="btn-start">Retake</a>
+                    {% else %}
                     <a href="{% url 'start_exam' exam.id %}" class="btn-start">Start</a>
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>
