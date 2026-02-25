@@ -708,6 +708,7 @@
                             <th>Tab Switch</th>
                             <th>Copy/Paste</th>
                             <th>Right Click</th>
+                            <th>Focus Lost</th>
                             <th>Total</th>
                             <th>Status</th>
                         </tr>
@@ -722,6 +723,7 @@
                             <td>{{ result.violations_tab_switch|default:"0" }}</td>
                             <td>{{ result.violations_copy_paste|default:"0" }}</td>
                             <td>{{ result.violations_right_click|default:"0" }}</td>
+                            <td>{{ result.violations_focus_lost|default:"0" }}</td>
                             <td>
                                 {% if result.total_violations > 0 %}
                                 <span class="badge badge-violation">{{ result.total_violations }}</span>
