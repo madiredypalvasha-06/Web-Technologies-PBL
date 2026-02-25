@@ -79,23 +79,14 @@ WSGI_APPLICATION = 'online_exam.wsgi.application'
 
 # Use PostgreSQL for shared database (recommended for team)
 # Set DATABASE_URL environment variable or configure below
+import dj_database_url
 import os
 
-DATABASE_URL = os.environ.get('DATABASE_URL', '')
-
-if DATABASE_URL:
-    import dj_database_url
-    DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL)
-    }
-else:
-    # Fallback to SQLite for local development
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.environ.get("DATABASE_URL")
+    )
+}
 
 
 # Password validation
