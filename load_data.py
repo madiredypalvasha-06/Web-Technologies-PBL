@@ -176,15 +176,16 @@ practice_tests = [
 ]
 
 for title, desc, category, difficulty, questions, time_limit in practice_tests:
+    cat = QuestionCategory.objects.get(name=category)
     PracticeTest.objects.get_or_create(
         title=title,
         defaults={
             'description': desc,
-            'category': category,
+            'category': cat,
             'difficulty': difficulty,
-            'number_of_questions': questions,
-            'time_limit': time_limit,
-            'is_active': True
+            'is_timed': True,
+            'time_limit_minutes': time_limit,
+            'is_published': True
         }
     )
 print(f"  Created {PracticeTest.objects.count()} practice tests")
@@ -202,14 +203,15 @@ worksheets = [
 ]
 
 for title, desc, category, difficulty, questions in worksheets:
+    cat = QuestionCategory.objects.get(name=category)
     Worksheet.objects.get_or_create(
         title=title,
         defaults={
             'description': desc,
-            'category': category,
+            'category': cat,
             'difficulty': difficulty,
             'number_of_questions': questions,
-            'is_active': True
+            'is_published': True
         }
     )
 print(f"  Created {Worksheet.objects.count()} worksheets")
@@ -227,13 +229,14 @@ materials = [
 ]
 
 for title, desc, category, material_type in materials:
+    cat = QuestionCategory.objects.get(name=category)
     StudyMaterial.objects.get_or_create(
         title=title,
         defaults={
             'description': desc,
-            'category': category,
+            'category': cat,
             'material_type': material_type,
-            'is_active': True
+            'is_published': True
         }
     )
 print(f"  Created {StudyMaterial.objects.count()} study materials")

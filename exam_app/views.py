@@ -307,51 +307,49 @@ def start_exam(request, exam_id):
         messages.error(request, 'You have already completed this exam')
         return redirect('student_dashboard')
     
-    if request.method == 'POST':
-        tab_switch_count = int(request.POST.get('tab_switch_count', 0))
-        
-        session = ExamSession.objects.filter(student=student, exam=exam, is_completed=False).first()
-        if not session:
-            # Random question generation
+    # Check for existing incomplete session or create new one (GET request)
+    session = ExamSession.objects.filter(student=student, exam=exam, is_completed=False).first()
+    if not session:
+        # Generate random questions
+        if exam.category:
             questions = list(Question.objects.filter(
                 Q(category=exam.category) | Q(category__isnull=True),
                 is_active=True
             ))
-            
-            if exam.randomize_questions:
-                # Shuffle and select random questions
-                random.shuffle(questions)
-                selected_questions = questions[:exam.number_of_questions]
-            else:
-                selected_questions = questions[:exam.number_of_questions]
-            
-            # Shuffle answer options for each question
-            randomized_questions = []
-            for q in selected_questions:
-                q_dict = {
-                    'id': q.id,
-                    'question_text': q.question_text,
-                    'option1': q.option1,
-                    'option2': q.option2,
-                    'option3': q.option3,
-                    'option4': q.option4,
-                    'correct_answer': q.correct_answer,
-                    'marks': q.marks
-                }
-                # Shuffle options
-                options = [
-                    q.option1, q.option2, q.option3, q.option4
-                ]
-                random.shuffle(options)
-                q_dict['shuffled_options'] = options
-                randomized_questions.append(q_dict)
-            
-            session = ExamSession.objects.create(
-                student=student, exam=exam,
-                questions=[q['id'] for q in randomized_questions],
-                answers={},
-                ip_address=request.META.get('REMOTE_ADDR', '')
-            )
+        else:
+            questions = list(Question.objects.filter(is_active=True))
+        
+        if exam.randomize_questions:
+            random.shuffle(questions)
+        selected_questions = questions[:exam.number_of_questions]
+        
+        # Shuffle answer options
+        randomized_questions = []
+        for q in selected_questions:
+            q_dict = {
+                'id': q.id,
+                'question_text': q.question_text,
+                'option1': q.option1,
+                'option2': q.option2,
+                'option3': q.option3,
+                'option4': q.option4,
+                'correct_answer': q.correct_answer,
+                'marks': q.marks
+            }
+            options = [q.option1, q.option2, q.option3, q.option4]
+            random.shuffle(options)
+            q_dict['shuffled_options'] = options
+            randomized_questions.append(q_dict)
+        
+        session = ExamSession.objects.create(
+            student=student, exam=exam,
+            questions=[q['id'] for q in randomized_questions],
+            answers={},
+            ip_address=request.META.get('REMOTE_ADDR', '')
+        )
+    
+    if request.method == 'POST':
+        tab_switch_count = int(request.POST.get('tab_switch_count', 0))
         
         # Collect answers
         for q_id in session.questions:
@@ -641,10 +639,15 @@ def start_practice_test(request, test_id):
     student = get_object_or_404(Student, user=request.user)
     practice_test = get_object_or_404(PracticeTest, id=test_id, is_published=True)
     
-    questions = Question.objects.filter(
-        Q(category=practice_test.category) | Q(category__isnull=True),
-        is_active=True
-    )
+    # Get questions - include all if no specific category
+    if practice_test.category:
+        questions = Question.objects.filter(
+            Q(category=practice_test.category) | Q(category__isnull=True),
+            is_active=True
+        )
+    else:
+        questions = Question.objects.filter(is_active=True)
+    
     if practice_test.difficulty != 'all':
         questions = questions.filter(difficulty=practice_test.difficulty)
     
