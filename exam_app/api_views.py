@@ -108,10 +108,19 @@ def api_exams(request):
     
     available_exams = Exam.objects.filter(
         is_active=True,
-        exam_date=today
-    ).filter(
-        Q(start_time__lte=current_time) & Q(end_time__gte=current_time)
+        exam_date__gte=today
     )
+    
+    now = datetime.now()
+    filtered_exams = []
+    for exam in available_exams:
+        if exam.exam_date == today:
+            if exam.start_time <= current_time <= exam.end_time:
+                filtered_exams.append(exam)
+        else:
+            filtered_exams.append(exam)
+    
+    available_exams = filtered_exams
     
     completed_sessions = ExamSession.objects.filter(student=student, is_completed=True)
     available_exams = [exam for exam in available_exams if not completed_sessions.filter(exam=exam).exists()]

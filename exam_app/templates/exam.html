@@ -150,6 +150,12 @@
         </div>
     </div>
     
+    {% if not questions %}
+    <div style="background: red; color: white; padding: 20px; text-align: center; font-weight: bold;">
+        ERROR: No questions found for this exam! Please contact administrator.
+    </div>
+    {% endif %}
+    
     <div class="security-notice">
         <i class="bi bi-shield-check"></i>
         <span>WARNING: Monitoring Active - Tab switches, window focus, copy/paste, and screenshots are being logged. Any malpractice will be recorded.</span>

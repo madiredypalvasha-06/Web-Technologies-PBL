@@ -311,13 +311,25 @@ def start_exam(request, exam_id):
     session = ExamSession.objects.filter(student=student, exam=exam, is_completed=False).first()
     if not session:
         # Generate random questions
+        print(f"DEBUG: Exam category = {exam.category}")
+        print(f"DEBUG: Exam number_of_questions = {exam.number_of_questions}")
+        print(f"DEBUG: Total questions in DB = {Question.objects.count()}")
+        print(f"DEBUG: Active questions in DB = {Question.objects.filter(is_active=True).count()}")
+        
         if exam.category:
             questions = list(Question.objects.filter(
                 Q(category=exam.category) | Q(category__isnull=True),
                 is_active=True
             ))
+            print(f"DEBUG: Questions with category filter = {len(questions)}")
         else:
             questions = list(Question.objects.filter(is_active=True))
+            print(f"DEBUG: Questions without category filter = {len(questions)}")
+        
+        # Fallback: if no questions found with category, get all active questions
+        if not questions:
+            questions = list(Question.objects.filter(is_active=True))
+            print(f"DEBUG: Fallback questions = {len(questions)}")
         
         if exam.randomize_questions:
             random.shuffle(questions)
@@ -425,8 +437,12 @@ def start_exam(request, exam_id):
     # Get or create exam session
     active_session = ExamSession.objects.filter(student=student, exam=exam, is_completed=False).first()
     
+    print(f"DEBUG2: active_session = {active_session}")
+    
     if active_session:
+        print(f"DEBUG2: session.questions = {active_session.questions}")
         questions = Question.objects.filter(id__in=active_session.questions)
+        print(f"DEBUG2: loaded questions count = {questions.count()}")
         # Shuffle options for display randomization
         question_list = []
         for q in questions:
@@ -443,10 +459,17 @@ def start_exam(request, exam_id):
             })
     else:
         # Random question generation - fetch and shuffle
-        questions = list(Question.objects.filter(
-            Q(category=exam.category) | Q(category__isnull=True),
-            is_active=True
-        ))
+        if exam.category:
+            questions = list(Question.objects.filter(
+                Q(category=exam.category) | Q(category__isnull=True),
+                is_active=True
+            ))
+        else:
+            questions = list(Question.objects.filter(is_active=True))
+        
+        # Fallback: if no questions found with category, get all active questions
+        if not questions:
+            questions = list(Question.objects.filter(is_active=True))
         
         if exam.randomize_questions:
             random.shuffle(questions)
